@@ -1,0 +1,22 @@
+
+stages:
+  - check
+  - build
+# 构建 Job
+check:
+  stage: check
+  tags:
+    - maven
+  script:
+    - mvn -v
+build:
+  stage: build
+  tags:
+    - maven
+  script:
+    - mvn package
+    - ls ./target/*.jar
+  artifacts:
+    expire_in: 1 week
+    paths:
+      - ./target/*.jar
