@@ -1,0 +1,10 @@
+com\carmwork\aliddns\utils\JsonFormatTool.class
+com\carmwork\aliddns\managers\RequestManager.class
+com\carmwork\aliddns\enums\RecordType.class
+com\carmwork\aliddns\model\UpdateRequest.class
+com\carmwork\aliddns\Main.class
+com\carmwork\aliddns\managers\DNSManager.class
+com\carmwork\aliddns\utils\IPAddressUtil.class
+com\carmwork\aliddns\managers\ConfigManager.class
+com\carmwork\aliddns\utils\IPAddressUtil$1.class
+com\carmwork\aliddns\Main$1.class

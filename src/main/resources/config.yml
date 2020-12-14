@@ -1,0 +1,36 @@
+# Ali ddns Updater
+version: 1.6
+
+#更新间隔(毫秒)
+period: 900000
+
+#输出域名记录查询返回信息
+outputDomainRecordsResponse: false
+
+#IP查询网址
+IPQueryURL:
+  IPv4: http://ip.cip.cc
+  IPv6: http://v6.ip.zxinc.org/getip
+
+
+#更新任务列表
+UpdateRequests:
+  #任务格式
+  #'example':
+  #  AccessKey:
+  #  AccessKeySecret:
+  #
+  #  #域名
+  #  domain: love.com
+  #
+  #  #主机记录
+  #  record: server
+  #
+  #  #记录类型 (仅可A记录或AAAA记录)
+  #  type: AAAA
+  test:
+    AccessKey: xx
+    AccessKeySecret: xx
+    domain: test.cn
+    record: test
+    type: A
