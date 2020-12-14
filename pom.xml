@@ -22,7 +22,7 @@
 
         <repository>
             <id>Central Repository</id>
-            <url>https://repo1.maven.org/maven2/</url>
+            <url>https://maven.aliyun.com/repository/public</url>
         </repository>
 
 
