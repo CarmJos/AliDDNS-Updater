@@ -1,6 +1,7 @@
 
 stages:
   - check
+  - clean
   - build
 # 构建 Job
 check:
@@ -9,12 +10,18 @@ check:
     - maven
   script:
     - mvn -v
+clean:
+  stage: clean
+  tags:
+    - maven
+  script:
+    - mvn clean
 build:
   stage: build
   tags:
     - maven
   script:
-    - mvn package
+    - mvn install
     - ls ./target/*.jar
   artifacts:
     expire_in: 1 week
