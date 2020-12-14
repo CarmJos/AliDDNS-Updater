@@ -16,15 +16,14 @@
 
     <repositories>
         <repository>
-            <id>codemc-snapshots</id>
-            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
-        </repository>
-
-        <repository>
             <id>Central Repository</id>
             <url>https://maven.aliyun.com/repository/public</url>
         </repository>
 
+        <repository>
+            <id>codemc-snapshots</id>
+            <url>https://repo.codemc.io/repository/maven-snapshots/</url>
+        </repository>
 
     </repositories>
 

@@ -14,7 +14,7 @@ build:
   tags:
     - maven
   script:
-    - mvn clean install
+    - mvn clean install --offline
     - ls ./target/*.jar
   artifacts:
     expire_in: 1 week
