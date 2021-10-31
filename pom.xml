@@ -42,11 +42,6 @@
         <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
 
-    <organization>
-        <name>YourCraft你的世界</name>
-        <url>https://www.ycraft.cn/</url>
-    </organization>
-
     <licenses>
         <license>
             <name>GNU General Public License v3.0</name>
