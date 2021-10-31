@@ -1,9 +1,9 @@
 package cc.carm.app.aliddns.manager;
 
 import com.google.common.base.Charsets;
-import com.sun.istack.internal.Nullable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.net.URL;

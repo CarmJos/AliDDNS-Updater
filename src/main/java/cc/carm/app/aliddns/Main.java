@@ -2,7 +2,7 @@ package cc.carm.app.aliddns;
 
 import cc.carm.app.aliddns.manager.ConfigManager;
 import cc.carm.app.aliddns.manager.RequestManager;
-import com.sun.istack.internal.NotNull;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Timer;
