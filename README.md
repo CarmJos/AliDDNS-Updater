@@ -6,6 +6,13 @@
 
 阿里云服务，域名DDNS更新器，支持IPV6。
 
+## 使用方法
+
+下载后，放到单独的文件夹内，在控制台中执行以下命令即可运行。
+```shell
+java -jar aliddns-updater-<version>.jar
+```
+
 ## 配置文件示例
 
 ```yaml
