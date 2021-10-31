@@ -1,10 +1,7 @@
 # 阿里云DDNS更新器
 
-[![CodeFactor](https://www.codefactor.io/repository/github/carmjos/aliddns-updater/badge?s=b76fec1f64726b5f19989aace6adb5f85fdab840)](https://www.codefactor.io/repository/github/carmjos/aliddns-updater)
 ![CodeSize](https://img.shields.io/github/languages/code-size/CarmJos/aliddns-updater)
-[![License](https://img.shields.io/github/license/CarmJos/aliddns-updater)](https://opensource.org/licenses/GPL-3.0)
-[![Build](https://github.com/CarmJos/aliddns-updater/actions/workflows/maven.yml/badge.svg?branch=master)](https://github.com/CarmJos/aliddns-updater/actions/workflows/maven.yml)
-![Support](https://img.shields.io/badge/Minecraft-Java%201.8--Latest-yellow)
+[![License](https://img.shields.io/github/license/CarmJos/aliddns-updater)](https://opensource.org/licenses/GPL-3.0)~~~~
 ![](https://visitor-badge.glitch.me/badge?page_id=aliddns-updater.readme)
 
 阿里云服务，域名DDNS更新器，支持IPV6。
