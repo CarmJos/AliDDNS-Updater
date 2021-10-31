@@ -82,7 +82,6 @@ public class DNSManager {
         if (domainRecords == null) {
             System.err.println("     Failed to get domain records.");
             System.err.println("     Please check your configuration.");
-            System.exit(1);
             return;
         }
 
