@@ -1,6 +1,7 @@
-package com.carmwork.aliddns.managers;
+package cc.carm.app.aliddns.manager;
 
 import com.google.common.base.Charsets;
+import com.sun.istack.internal.Nullable;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -10,7 +11,9 @@ import java.net.URLConnection;
 
 public class ConfigManager {
 
-    private double configVersion = 1.6;
+    private static ConfigManager instance;
+
+    private final double CONFIG_VERSION = 1.7;
 
     private File sourceFile;
     private File dataFolder;
@@ -20,17 +23,43 @@ public class ConfigManager {
 
 
     public ConfigManager() {
+        instance = this;
+
         String path = this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath();
-
         this.sourceFile = new File(path);
-
-
         this.dataFolder = sourceFile.getParentFile();
-
         this.configFile = new File(dataFolder, "config.yml");
 
     }
 
+    public static boolean isDebugMode() {
+        return true;
+    }
+
+    public static String getRegionID() {
+        return getInstance().getConfig().getString("Service.region-id", "cn-hangzhou");
+    }
+
+    public static long getPeriod() {
+        return getInstance().getConfig().getLong("Service.period", 900000L);
+    }
+
+    public static String getIPv4QueryURL() {
+        return getInstance().getConfig().getString("Service.ipQuery.IPv4", "http://ifconfig.me/ip");
+    }
+
+    @Nullable
+    public static String getIPv6QueryURL() {
+        return getInstance().getConfig().getString("Service.ipQuery.IPv6", "https://v6.ip.zxinc.org/getip");
+    }
+
+    public static boolean isIPV6Enabled() {
+        return getIPv6QueryURL() == null || getIPv4QueryURL().length() == 0;
+    }
+
+    public static ConfigManager getInstance() {
+        return instance;
+    }
 
     public FileConfiguration getConfig() {
         if (newConfig == null) {
@@ -64,13 +93,13 @@ public class ConfigManager {
         if (!configFile.exists()) {
             createConfig();
         } else {
-            System.out.println("    Configuration found at " + configFile.getAbsolutePath());
+            System.out.println("    配置文件加载于 " + configFile.getAbsolutePath());
         }
     }
 
     public void createConfig() {
         saveResource("config.yml", true);
-        System.out.println("    Configuration created at " + configFile.getAbsolutePath());
+        System.out.println("    配置文件创建于 " + configFile.getAbsolutePath());
     }
 
     public void saveResource(String resourcePath, boolean replace) {
@@ -133,7 +162,7 @@ public class ConfigManager {
     public void backupConfig() {
         try {
             copy(configFile, "config.yml.bak");
-            System.out.println("    Configuration backup at " + configFile.getAbsolutePath() + ".bak");
+            System.out.println("    旧的配置文件已备份与 " + configFile.getAbsolutePath() + ".bak");
             this.configFile = new File(dataFolder, "config.yml");
         } catch (Exception ignore) {
 
@@ -166,6 +195,8 @@ public class ConfigManager {
     }
 
     public double getConfigVersion() {
-        return configVersion;
+        return CONFIG_VERSION;
     }
+
+
 }

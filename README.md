@@ -6,7 +6,44 @@
 
 阿里云服务，域名DDNS更新器，支持IPV6。
 
-部分项目代码参考与各大Blog。
+## 配置文件示例
+
+```yaml
+version: 1.7
+
+#输出域名记录查询返回信息
+debug: false
+
+Service:
+  #更新间隔(毫秒)
+  period: 900000
+  # 阿里云地域ID，可以不改动
+  # 请参考 https://help.aliyun.com/knowledge_detail/40654.html
+  region-id: "cn-hangzhou"
+  # IP地址查询相关设定
+  # 用于获取对应的IP地址，以更新到域名
+  # 如不需要IPV6，则可以直接将地址留空。
+  ipQuery:
+    IPv4: "http://ifconfig.me/ip"
+    IPv6: "https://v6.ip.zxinc.org/getip"
+
+
+#更新任务列表
+UpdateRequests:
+  test:
+    domain: "test.cn"  # 域名，如 www.baidu.com 中的 baidu.com
+    AccessKey: "xx" # 访问密钥 (在个人控制台中获取)
+    AccessSecret: "xx" # 访问密码 (在个人控制台中获取)
+    record: "www" #主机记录
+    ipv6: false # 该记录是否为IPv6[AAAA]记录 (默认为false)
+```
+
+## 守护进程示例
+
+### Linux systemd
+
+请参考 [systemd自启动java程序](https://www.cnblogs.com/yoyotl/p/8178363.html) 。
+
 
 ## 支持与捐赠
 

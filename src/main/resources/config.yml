@@ -1,36 +1,27 @@
-# Ali ddns Updater
-version: 1.6
-
-#更新间隔(毫秒)
-period: 900000
+version: 1.7
 
 #输出域名记录查询返回信息
-outputDomainRecordsResponse: false
+debug: false
 
-#IP查询网址
-IPQueryURL:
-  IPv4: http://ip.cip.cc
-  IPv6: http://v6.ip.zxinc.org/getip
+Service:
+  #更新间隔(毫秒)
+  period: 900000
+  # 阿里云地域ID，可以不改动
+  # 请参考 https://help.aliyun.com/knowledge_detail/40654.html
+  region-id: "cn-hangzhou"
+  # IP地址查询相关设定
+  # 用于获取对应的IP地址，以更新到域名
+  # 如不需要IPV6，则可以直接将地址留空。
+  ipQuery:
+    IPv4: "http://ifconfig.me/ip"
+    IPv6: "https://v6.ip.zxinc.org/getip"
 
 
 #更新任务列表
 UpdateRequests:
-  #任务格式
-  #'example':
-  #  AccessKey:
-  #  AccessKeySecret:
-  #
-  #  #域名
-  #  domain: love.com
-  #
-  #  #主机记录
-  #  record: server
-  #
-  #  #记录类型 (仅可A记录或AAAA记录)
-  #  type: AAAA
   test:
-    AccessKey: xx
-    AccessKeySecret: xx
-    domain: test.cn
-    record: test
-    type: A
+    domain: "test.cn"  # 域名，如 www.baidu.com 中的 baidu.com
+    AccessKey: "xx" # 访问密钥 (在个人控制台中获取)
+    AccessSecret: "xx" # 访问密码 (在个人控制台中获取)
+    record: "www" #主机记录
+    ipv6: false # 该记录是否为IPv6[AAAA]记录 (默认为false)
