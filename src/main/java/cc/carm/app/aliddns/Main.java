@@ -15,7 +15,6 @@ public class Main {
 
     private static TimerTask updateTimerTask;
 
-
     public static void main(String[] args) throws InterruptedException {
         print("-------------------------------------------");
         print("阿里云服务 DDNS更新器");
@@ -101,4 +100,9 @@ public class Main {
     public static RequestManager getRequestManager() {
         return requestManager;
     }
+
+    public static TimerTask getUpdateTimerTask() {
+        return updateTimerTask;
+    }
+
 }

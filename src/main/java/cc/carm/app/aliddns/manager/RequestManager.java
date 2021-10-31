@@ -19,6 +19,8 @@ public class RequestManager {
     public final String SECTION = "UpdateRequests";
 
     private int updatedTimes = 1;
+    private boolean hasIPv6 = false;
+
     private final SimpleDateFormat format;
 
     public final HashMap<String, UpdateRequest> requests;
@@ -49,6 +51,9 @@ public class RequestManager {
             }
         }
 
+        this.hasIPv6 = getRequests().values().stream().anyMatch(UpdateRequest::isIpv6);
+        this.updatedTimes = 1;
+
         return getRequests().size();
     }
 
@@ -62,7 +67,7 @@ public class RequestManager {
         Main.info("     获取完成，当前IPv4地址为 " + IPv4);
 
         String IPv6 = null;
-        if (ConfigManager.isIPV6Enabled()) {
+        if (ConfigManager.isIPV6Enabled() && hasIPv6) {
             Main.info("开始从 " + ConfigManager.getIPv6QueryURL() + " 获取IPv6地址...");
             IPv6 = getCurrentHostIP(true);
             Main.info("     获取完成，当前IPv6地址为 " + IPv6);
