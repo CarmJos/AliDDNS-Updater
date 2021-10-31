@@ -5,18 +5,68 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.carmwork</groupId>
-    <artifactId>aliddns-Updater</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>aliddns-updater</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
+
+    <name>AliDDNS-Updater</name>
+    <description>阿里云DDNS更新器</description>
+    <url>https://github.com/CarmJos/AliDDNS-Updater</url>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>${project.url}/issues</url>
+    </issueManagement>
+
+    <ciManagement>
+        <system>GitHub Actions</system>
+        <url>${project.url}/actions/workflows/maven.yml</url>
+    </ciManagement>
+
+    <developers>
+        <developer>
+            <id>CarmJos</id>
+            <name>Carm Jos</name>
+            <email>carm@carm.cc</email>
+            <url>https://work.carm.cc</url>
+            <roles>
+                <role>Main Developer</role>
+            </roles>
+        </developer>
+    </developers>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.encoding>UTF-8</maven.compiler.encoding>
     </properties>
 
-    <repositories>
+    <organization>
+        <name>YourCraft你的世界</name>
+        <url>https://www.ycraft.cn/</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License v3.0</name>
+            <url>https://opensource.org/licenses/GPL-3.0</url>
+        </license>
+    </licenses>
+
+    <distributionManagement>
         <repository>
-            <id>Central Repository</id>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/CarmJos/${project.name}</url>
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+
+        <repository>
+            <id>maven-aliyun</id>
+            <name>Aliyun Central Repository</name>
             <url>https://maven.aliyun.com/repository/public</url>
         </repository>
 
@@ -25,10 +75,23 @@
             <url>https://repo.codemc.io/repository/maven-snapshots/</url>
         </repository>
 
+        <repository>
+            <id>maven-central</id>
+            <name>Central Repository</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/CarmJos/${project.name}</url>
+        </repository>
+
     </repositories>
 
 
     <dependencies>
+
         <!-- https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-alidns -->
         <dependency>
             <groupId>com.aliyun</groupId>
@@ -44,6 +107,7 @@
             <version>4.5.17</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>cc.bukkit</groupId>
             <artifactId>BukkitConfiguration</artifactId>
@@ -51,19 +115,67 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
+
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <classifier>javadoc</classifier>
+                    <links>
+                        <link>https://javadoc.io/doc/org.jetbrains/annotations/</link>
+                    </links>
+                    <detectJavaApiLink>true</detectJavaApiLink>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>UTF-8</encoding>
+                    <compilerArgument>-parameters</compilerArgument>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <version>3.2.0</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -75,6 +187,9 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                        </configuration>
                     </execution>
                 </executions>
                 <configuration>
@@ -83,36 +198,28 @@
                             <artifact>*:*</artifact>
                             <excludes>
                                 <exclude>META-INF/MANIFEST.MF</exclude>
+                                <exclude>META-INF/*.txt</exclude>
                             </excludes>
                         </filter>
                     </filters>
-                    <!-- when downloading via Maven we can pull depends individually -->
-                    <shadedArtifactAttached>true</shadedArtifactAttached>
                 </configuration>
             </plugin>
             <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.1</version>
                 <configuration>
-                    <descriptorRefs>
-                        <descriptRef>jar-with-dependencies</descriptRef>
-                    </descriptorRefs>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.carmwork.aliddns.Main</mainClass>
-                        </manifest>
-                    </archive>
+                    <useSystemClassLoader>false</useSystemClassLoader>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>make-assembly</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>assembly</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
+
 
 </project>
