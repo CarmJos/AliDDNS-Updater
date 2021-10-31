@@ -1,7 +1,7 @@
 # 阿里云DDNS更新器
 
 ![CodeSize](https://img.shields.io/github/languages/code-size/CarmJos/aliddns-updater)
-[![License](https://img.shields.io/github/license/CarmJos/aliddns-updater)](https://opensource.org/licenses/GPL-3.0)~~~~
+[![License](https://img.shields.io/github/license/CarmJos/aliddns-updater)](https://opensource.org/licenses/GPL-3.0)
 ![](https://visitor-badge.glitch.me/badge?page_id=aliddns-updater.readme)
 
 阿里云服务，域名DDNS更新器，支持IPV6。
