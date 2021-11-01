@@ -21,37 +21,34 @@ public class Main {
         print("项目地址 https://git.carm.cc/AliDDNS-Updater");
         print("-------------------------------------------");
         Thread.sleep(1000L);
-        info("初始化配置文件管理...");
+        print("初始化配置文件管理...");
 
         configManager = new ConfigManager();
         getConfigManager().initConfig();
 
         if (getConfigManager().getConfig().getDouble("version", 1.0) < getConfigManager().getConfigVersion()) {
-            info("    配置文件过时，正在尝试重新创建...");
+            print("    配置文件过时，正在尝试重新创建...");
             getConfigManager().backupConfig();
             getConfigManager().createConfig();
         }
 
-        info("    完成加载配置文件 v" + getConfigManager().getConfig().getDouble("version", 1.0));
+        print("    完成加载配置文件 v" + getConfigManager().getConfig().getDouble("version", 1.0));
 
-        info();
+        print();
 
-        info("初始化记录请求管理器...");
+        print("初始化记录请求管理器...");
         requestManager = new RequestManager();
         int loaded = requestManager.loadRequests();
 
         if (loaded < 1) {
-            error("    您没有配置任何记录，请检查配置文件！");
+            print("    您没有配置任何记录，请检查配置文件！");
             System.exit(0);
         } else {
-            info("    初始化完成，共加载了 " + loaded + " 个任务");
+            print("    初始化完成，共加载了 " + loaded + " 个任务");
         }
 
-        info();
-
-        System.out.println("所有任务已设定为每 " + ConfigManager.getPeriod() + " 毫秒进行一次更新。");
-        info();
-        info("启用更新线程...");
+        print();
+        print("所有任务已设定为每 " + ConfigManager.getPeriod() + " 毫秒进行一次更新。");
         print("-------------------------------------------");
 
         Timer timer = new Timer();

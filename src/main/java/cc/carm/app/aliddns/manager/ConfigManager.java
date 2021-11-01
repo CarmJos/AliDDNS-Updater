@@ -1,5 +1,6 @@
 package cc.carm.app.aliddns.manager;
 
+import cc.carm.app.aliddns.Main;
 import com.google.common.base.Charsets;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -85,7 +86,7 @@ public class ConfigManager {
         try {
             getConfig().save(configFile);
         } catch (IOException ex) {
-            System.out.print("Could not save config to " + configFile);
+            Main.error("Could not save config to " + configFile);
         }
     }
 
@@ -93,13 +94,24 @@ public class ConfigManager {
         if (!configFile.exists()) {
             createConfig();
         } else {
-            System.out.println("    配置文件加载于 " + configFile.getAbsolutePath());
+            Main.print("    配置文件加载于 " + configFile.getAbsolutePath());
         }
     }
 
+    public void backupConfig() {
+        try {
+            copy(configFile, "config.yml.bak");
+            Main.print("    旧的配置文件已备份与 " + configFile.getAbsolutePath() + ".bak");
+            this.configFile = new File(dataFolder, "config.yml");
+        } catch (Exception ignore) {
+
+        }
+    }
+
+
     public void createConfig() {
         saveResource("config.yml", true);
-        System.out.println("    配置文件创建于 " + configFile.getAbsolutePath());
+        Main.print("    配置文件创建于 " + configFile.getAbsolutePath());
     }
 
     public void saveResource(String resourcePath, boolean replace) {
@@ -132,10 +144,10 @@ public class ConfigManager {
                 out.close();
                 in.close();
             } else {
-                System.out.print("Could not save " + outFile.getName() + " to " + outFile + " because " + outFile.getName() + " already exists.");
+                Main.error("Could not save " + outFile.getName() + " to " + outFile + " because " + outFile.getName() + " already exists.");
             }
         } catch (IOException ex) {
-            System.out.print("Could not save " + outFile.getName() + " to " + outFile);
+            Main.error("Could not save " + outFile.getName() + " to " + outFile);
         }
     }
 
@@ -159,16 +171,6 @@ public class ConfigManager {
         }
     }
 
-    public void backupConfig() {
-        try {
-            copy(configFile, "config.yml.bak");
-            System.out.println("    旧的配置文件已备份与 " + configFile.getAbsolutePath() + ".bak");
-            this.configFile = new File(dataFolder, "config.yml");
-        } catch (Exception ignore) {
-
-        }
-
-    }
 
     /**
      * Rename the file.
