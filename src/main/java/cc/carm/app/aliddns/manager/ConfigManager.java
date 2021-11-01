@@ -54,7 +54,7 @@ public class ConfigManager {
     }
 
     public static boolean isIPV6Enabled() {
-        return getIPv6QueryURL() == null || getIPv4QueryURL().length() == 0;
+        return getIPv6QueryURL() != null && getIPv6QueryURL().length() > 0;
     }
 
     public static ConfigManager getInstance() {

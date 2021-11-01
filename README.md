@@ -9,6 +9,7 @@
 ## 使用方法
 
 下载后，放到单独的文件夹内，在控制台中执行以下命令即可运行。
+
 ```shell
 java -jar aliddns-updater-<version>.jar
 ```
@@ -51,6 +52,9 @@ UpdateRequests:
 
 请参考 [systemd自启动java程序](https://www.cnblogs.com/yoyotl/p/8178363.html) 。
 
+### Windows Service
+
+请参考 [windows环境下批处理实现守护进程](https://blog.csdn.net/qin9r3y/article/details/22805095)
 
 ## 支持与捐赠
 
