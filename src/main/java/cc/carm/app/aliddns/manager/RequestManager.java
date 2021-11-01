@@ -33,7 +33,6 @@ public class RequestManager {
 
     public int loadRequests() {
         requests.clear();
-        Main.info("正在加载记录...");
 
         FileConfiguration config = Main.getConfigManager().getConfig();
         ConfigurationSection rootSection = config.getConfigurationSection(SECTION);
