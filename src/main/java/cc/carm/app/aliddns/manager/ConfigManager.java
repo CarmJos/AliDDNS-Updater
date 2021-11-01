@@ -33,7 +33,7 @@ public class ConfigManager {
     }
 
     public static boolean isDebugMode() {
-        return true;
+        return getInstance().getConfig().getBoolean("debug", false);
     }
 
     public static String getRegionID() {
