@@ -68,11 +68,12 @@ public class RequestManager {
 
         String IPv6 = null;
         if (ConfigManager.isIPV6Enabled() && this.hasIPv6) {
-            Main.info("开始从 " + ConfigManager.getIPv6QueryURL() + " 获取IPv6地址...");
+            Main.info("从 " + ConfigManager.getIPv6QueryURL() + " 获取IPv6地址...");
             IPv6 = getCurrentHostIP(true);
             Main.info("     获取完成，当前IPv6地址为 " + IPv6);
         }
 
+        Main.info("执行更新任务列表...");
         for (Map.Entry<String, UpdateRequest> entry : getRequests().entrySet()) {
             UpdateRequest currentRequest = entry.getValue();
             if (currentRequest.isIpv6() && IPv6 == null) {
