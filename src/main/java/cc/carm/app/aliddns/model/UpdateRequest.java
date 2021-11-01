@@ -33,8 +33,6 @@ public class UpdateRequest {
 
     private final boolean ipv6;
 
-    private String recordID;
-
     public UpdateRequest(@NotNull String accessKey, @NotNull String accessKeySecret, String domain, String record, boolean ipv6) {
         this.accessKey = accessKey;
         this.accessKeySecret = accessKeySecret;
@@ -65,6 +63,14 @@ public class UpdateRequest {
         return record;
     }
 
+    public String getFullDomain() {
+        if (getRecord().equals("@")) {
+            return getDomain();
+        } else {
+            return getRecord() + "." + getDomain();
+        }
+    }
+
     public boolean isIpv6() {
         return ipv6;
     }
@@ -80,18 +86,18 @@ public class UpdateRequest {
                 section.getString("AccessSecret", "xx"),
                 section.getString("domain", "xx"),
                 section.getString("record", "xx"),
-                section.getBoolean("AccessSecret", false)
+                section.getBoolean("ipv6", false)
         );
     }
 
-
     /**
-     * 检查是否需要进行更新操作
+     * 进行更新操作
      *
      * @param currentValue 当前数值内容
-     * @return 若当前数值与最新数值不同，则返回true。
      */
-    public boolean shouldUpdate(String currentValue) throws ClientException {
+    public void doUpdate(String currentValue) throws ClientException {
+
+
         DescribeDomainRecordsRequest describeDomainRecordsRequest = new DescribeDomainRecordsRequest();
         describeDomainRecordsRequest.setDomainName(getDomain());        // 主域名
         describeDomainRecordsRequest.setRRKeyWord(getRecord());  // 主机记录
@@ -100,44 +106,43 @@ public class UpdateRequest {
         // 获取主域名的所有解析记录列表
         DescribeDomainRecordsResponse describeDomainRecordsResponse = client.getAcsResponse(describeDomainRecordsRequest);
         if (ConfigManager.isDebugMode()) {
-            Main.debug(" ", JSON.toJSONString(describeDomainRecordsResponse, true));
+            Main.debug(" \n" + JSON.toJSONString(describeDomainRecordsResponse, true));
         }
         // 最新的一条解析记录
         List<DescribeDomainRecordsResponse.Record> domainRecords = describeDomainRecordsResponse.getDomainRecords();
 
         if (domainRecords == null || domainRecords.size() == 0) {
             Main.error("    域名“" + getDomain() + "”下无" + getRecordType() + "记录 “" + getRecord() + "” ，请检查阿里云控制台。");
-            return false;
+            return;
         }
 
         DescribeDomainRecordsResponse.Record record = domainRecords.get(0); //得到最新一条
 
-        this.recordID = record.getRecordId(); //记录RecordID
+        String recordID = record.getRecordId(); //记录RecordID
         String recordValue = record.getValue();
 
-        return currentValue.length() > 0 && !currentValue.equals(recordValue);
-    }
+        if (currentValue.length() > 0 && !currentValue.equals(recordValue)) {
+            UpdateDomainRecordRequest updateDomainRecordRequest = new UpdateDomainRecordRequest();
+            updateDomainRecordRequest.setRR(getRecord());
+            updateDomainRecordRequest.setRecordId(recordID);
+            updateDomainRecordRequest.setValue(currentValue);
+            updateDomainRecordRequest.setType(getRecordType());
 
-    /**
-     * 进行更新操作
-     *
-     * @param currentValue 当前数值内容
-     */
-    public boolean doUpdate(String currentValue) throws ClientException {
-        UpdateDomainRecordRequest updateDomainRecordRequest = new UpdateDomainRecordRequest();
-        updateDomainRecordRequest.setRR(getRecord());
-        updateDomainRecordRequest.setRecordId(recordID);
-        updateDomainRecordRequest.setValue(currentValue);
-        updateDomainRecordRequest.setType(getRecordType());
+            //发出请求，收到回复
+            UpdateDomainRecordResponse updateDomainRecordResponse = client.getAcsResponse(updateDomainRecordRequest);
 
-        //发出请求，收到回复
-        UpdateDomainRecordResponse updateDomainRecordResponse = client.getAcsResponse(updateDomainRecordRequest);
+            if (ConfigManager.isDebugMode()) {
+                Main.debug(" \n" + JSON.toJSONString(updateDomainRecordResponse, true));
+            }
 
-        if (ConfigManager.isDebugMode()) {
-            Main.debug(" ", JSON.toJSONString(updateDomainRecordResponse, true));
+            if (recordID.equals(updateDomainRecordResponse.getRecordId())) {
+                Main.info("     记录 “" + getFullDomain() + "” 成功更新为 " + currentValue + " 。");
+            } else {
+                Main.error("    记录 “" + getFullDomain() + "” 更新失败,请检查网络与配置。");
+            }
+        } else {
+            Main.info("     记录 “" + getFullDomain() + "” 无需更新，跳过。");
         }
-
-        return this.recordID.equals(updateDomainRecordResponse.getRecordId());
     }
 
 

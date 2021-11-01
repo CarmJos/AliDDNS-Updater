@@ -62,12 +62,12 @@ public class RequestManager {
 
         Main.info("[" + this.format.format(new Date()) + "]" + " 开始执行第" + updatedTimes + "次更新...");
 
-        Main.info("开始从 " + ConfigManager.getIPv4QueryURL() + " 获取IPv4地址...");
+        Main.info("从 " + ConfigManager.getIPv4QueryURL() + " 获取IPv4地址...");
         String IPv4 = getCurrentHostIP(false);
         Main.info("     获取完成，当前IPv4地址为 " + IPv4);
 
         String IPv6 = null;
-        if (ConfigManager.isIPV6Enabled() && hasIPv6) {
+        if (ConfigManager.isIPV6Enabled() && this.hasIPv6) {
             Main.info("开始从 " + ConfigManager.getIPv6QueryURL() + " 获取IPv6地址...");
             IPv6 = getCurrentHostIP(true);
             Main.info("     获取完成，当前IPv6地址为 " + IPv6);
@@ -80,19 +80,7 @@ public class RequestManager {
                 continue;
             }
             try {
-
-                String currentHost = currentRequest.isIpv6() ? IPv6 : IPv4;
-
-                if (currentRequest.shouldUpdate(currentHost)) {
-                    boolean success = currentRequest.doUpdate(currentHost);
-                    if (success) {
-                        Main.info("     记录 “" + currentRequest.getRecord() + "." + currentRequest.getDomain() + "” 成功更新为 " + currentHost + " 。");
-                    } else {
-                        Main.error("    记录 “" + currentRequest.getRecord() + "." + currentRequest.getDomain() + "” 更新失败,请检查网络。");
-                    }
-                } else {
-                    Main.info("     记录 “" + currentRequest.getRecord() + "." + currentRequest.getDomain() + "” 无需更新，跳过。");
-                }
+                currentRequest.doUpdate(currentRequest.isIpv6() ? IPv6 : IPv4);
             } catch (Exception exception) {
                 Main.error("在更新请求 [" + entry.getKey() + "] 时发生问题，请检查配置。");
                 exception.printStackTrace();
