@@ -57,6 +57,7 @@
             <name>GitHub Packages</name>
             <url>https://maven.pkg.github.com/CarmJos/${project.name}</url>
         </repository>
+        <downloadUrl>${project.url}/releases</downloadUrl>
     </distributionManagement>
 
     <repositories>
@@ -88,6 +89,12 @@
 
 
     <dependencies>
+
+        <dependency>
+            <groupId>cc.carm.plugin</groupId>
+            <artifactId>userprefix</artifactId>
+            <version>2.1.7</version>
+        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-alidns -->
         <dependency>
