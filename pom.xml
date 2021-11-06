@@ -90,12 +90,6 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>cc.carm.plugin</groupId>
-            <artifactId>userprefix</artifactId>
-            <version>2.1.7</version>
-        </dependency>
-
         <!-- https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-alidns -->
         <dependency>
             <groupId>com.aliyun</groupId>
