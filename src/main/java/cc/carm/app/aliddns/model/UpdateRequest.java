@@ -1,20 +1,20 @@
 package cc.carm.app.aliddns.model;
 
 import cc.carm.app.aliddns.Main;
-import cc.carm.app.aliddns.manager.ConfigManager;
+import cc.carm.app.aliddns.conf.ServiceConfig;
 import com.alibaba.fastjson.JSON;
 import com.aliyuncs.DefaultAcsClient;
-import com.aliyuncs.IAcsClient;
 import com.aliyuncs.alidns.model.v20150109.DescribeDomainRecordsRequest;
 import com.aliyuncs.alidns.model.v20150109.DescribeDomainRecordsResponse;
 import com.aliyuncs.alidns.model.v20150109.UpdateDomainRecordRequest;
 import com.aliyuncs.alidns.model.v20150109.UpdateDomainRecordResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
-import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class UpdateRequest {
 
@@ -23,10 +23,6 @@ public class UpdateRequest {
     private final String accessKey;
     @NotNull
     private final String accessKeySecret;
-
-    private final DefaultProfile profile;
-    private final IAcsClient client;
-
 
     private final String domain;
     private final String record;
@@ -39,10 +35,18 @@ public class UpdateRequest {
         this.domain = domain;
         this.record = record;
         this.ipv6 = ipv6;
+    }
 
-        this.profile = DefaultProfile.getProfile(ConfigManager.getRegionID(), getAccessKey(), getAccessKeySecret());
-        this.client = new DefaultAcsClient(profile);
 
+    public Map<String, Object> serialize() {
+        Map<String, Object> data = new LinkedHashMap<>();
+        data.put("domain", getDomain());
+        data.put("record", getRecord());
+        data.put("ipv6", isIpv6());
+
+        data.put("access-key", getAccessKey());
+        data.put("access-secret", getAccessKeySecret());
+        return data;
     }
 
     @NotNull
@@ -79,17 +83,6 @@ public class UpdateRequest {
         return isIpv6() ? "AAAA" : "A";
     }
 
-    @NotNull
-    public static UpdateRequest readConfiguration(@NotNull ConfigurationSection section) {
-        return new UpdateRequest(
-                section.getString("AccessKey", "xx"),
-                section.getString("AccessSecret", "xx"),
-                section.getString("domain", "xx"),
-                section.getString("record", "xx"),
-                section.getBoolean("ipv6", false)
-        );
-    }
-
     /**
      * 进行更新操作
      *
@@ -97,6 +90,8 @@ public class UpdateRequest {
      */
     public void doUpdate(String currentValue) throws ClientException {
 
+        DefaultProfile profile = DefaultProfile.getProfile(ServiceConfig.REGION_ID.getNotNull(), getAccessKey(), getAccessKeySecret());
+        DefaultAcsClient client = new DefaultAcsClient(profile);
 
         DescribeDomainRecordsRequest describeDomainRecordsRequest = new DescribeDomainRecordsRequest();
         describeDomainRecordsRequest.setDomainName(getDomain());        // 主域名
@@ -105,14 +100,13 @@ public class UpdateRequest {
 
         // 获取主域名的所有解析记录列表
         DescribeDomainRecordsResponse describeDomainRecordsResponse = client.getAcsResponse(describeDomainRecordsRequest);
-        if (ConfigManager.isDebugMode()) {
-            Main.debug(" \n" + JSON.toJSONString(describeDomainRecordsResponse, true));
-        }
+        Main.debug(" \n" + JSON.toJSONString(describeDomainRecordsResponse, true));
+
         // 最新的一条解析记录
         List<DescribeDomainRecordsResponse.Record> domainRecords = describeDomainRecordsResponse.getDomainRecords();
 
         if (domainRecords == null || domainRecords.size() == 0) {
-            Main.error("    域名“" + getDomain() + "”下无" + getRecordType() + "记录 “" + getRecord() + "” ，请检查阿里云控制台。");
+            Main.severe("    域名“" + getDomain() + "”下无" + getRecordType() + "记录 “" + getRecord() + "” ，请检查阿里云控制台。");
             return;
         }
 
@@ -130,15 +124,12 @@ public class UpdateRequest {
 
             //发出请求，收到回复
             UpdateDomainRecordResponse updateDomainRecordResponse = client.getAcsResponse(updateDomainRecordRequest);
-
-            if (ConfigManager.isDebugMode()) {
-                Main.debug(" \n" + JSON.toJSONString(updateDomainRecordResponse, true));
-            }
+            Main.debug(" \n" + JSON.toJSONString(updateDomainRecordResponse, true));
 
             if (recordID.equals(updateDomainRecordResponse.getRecordId())) {
                 Main.info("     记录 “" + getFullDomain() + "” 成功更新为 " + currentValue + " 。");
             } else {
-                Main.error("    记录 “" + getFullDomain() + "” 更新失败,请检查网络与配置。");
+                Main.severe("    记录 “" + getFullDomain() + "” 更新失败,请检查网络与配置。");
             }
         } else {
             Main.info("     记录 “" + getFullDomain() + "” 无需更新，跳过。");
