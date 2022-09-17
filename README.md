@@ -52,6 +52,10 @@ requests:
     access-secret: YOUR-ACCESS-SECRET
 ```
 
+## 视频教程
+
+您可以 [点击这里](https://www.bilibili.com/video/BV1t54y147aQ) 查看由开发者本人制作的简易视频讲解。
+
 ## 守护进程示例
 
 ### Linux systemd
@@ -62,22 +66,13 @@ requests:
 
 请参考 [windows环境下批处理实现守护进程](https://blog.csdn.net/qin9r3y/article/details/22805095)
 
-## 视频教程
-
-您可以 [点击这里](https://www.bilibili.com/video/BV1t54y147aQ) 查看由开发者本人制作的简易视频讲解。
-
-## 支持与捐赠
-
-若您觉得本软件做的不错，您可以捐赠支持我！
-
-感谢您成为开源项目的支持者！
-
-<img height=25% width=25% src="https://raw.githubusercontent.com/CarmJos/CarmJos/main/img/donate-code.jpg" />
-
 ## 开源协议
 
 本项目源码采用 [GNU General Public License v3.0](https://opensource.org/licenses/GPL-3.0) 开源协议。
-> ### 关于 GPL 协议
+
+<details>
+<summary>关于 GPL 协议</summary>
+
 > GNU General Public Licence (GPL) 有可能是开源界最常用的许可模式。GPL 保证了所有开发者的权利，同时为使用者提供了足够的复制，分发，修改的权利：
 >
 > #### 可自由复制
@@ -94,3 +89,5 @@ requests:
 > @PierreJoye 写的 Practical Guide to GPL Compliance 一文。使用 GPL 协议，你必须在源代码代码中包含相应信息，以及协议本身。
 >
 > *以上文字来自 [五种开源协议GPL,LGPL,BSD,MIT,Apache](https://www.oschina.net/question/54100_9455) 。*
+
+</details>
