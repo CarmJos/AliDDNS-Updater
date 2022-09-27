@@ -21,8 +21,10 @@ public class Main {
     private static RequestManager requestManager;
 
     public static void main(String[] args) throws InterruptedException {
+        String currentVersion = new VersionReader("version.properties").get("version");
+
         print("-------------------------------------------");
-        print("阿里云服务 DDNS更新器 (v" + getCurrentVersion() + ")");
+        print("阿里云服务 DDNS更新器 (v" + currentVersion + ")");
         print("项目地址 https://git.carm.cc/AliDDNS-Updater");
         print("-------------------------------------------");
         Thread.sleep(1000L);
@@ -46,8 +48,24 @@ public class Main {
         print();
 
         if (AppConfig.CHECK_UPDATE.getNotNull()) {
-            info("正在检查更新(可以在配置文件中关闭此功能)... ");
-            checkUpdate();
+            print("正在检查更新(可以在配置文件中关闭此功能)... ");
+
+            Integer behindVersions = GithubReleases4J.getVersionBehind("CarmJos", "AliDDNS-Updater", currentVersion);
+            String downloadURL = GithubReleases4J.getReleasesURL("CarmJos", "AliDDNS-Updater");
+
+            if (behindVersions == null) {
+                print("    检查更新失败，请您定期查看插件是否更新，避免安全问题。");
+                print("    下载地址 " + downloadURL);
+            } else if (behindVersions == 0) {
+                print("    检查完成，当前已是最新版本。");
+            } else if (behindVersions > 0) {
+                print("    发现新版本! 目前已落后 " + behindVersions + " 个版本。");
+                print("    最新版下载地址 " + downloadURL);
+            } else {
+                print("    检查更新失败! 当前版本未知，请您使用原生版本以避免安全问题。");
+                print("    最新版下载地址 " + downloadURL);
+            }
+
             print();
         }
 
@@ -107,29 +125,6 @@ public class Main {
 
     public static RequestManager getRequestManager() {
         return requestManager;
-    }
-
-    protected static void checkUpdate() {
-        String currentVersion = getCurrentVersion();
-        Integer behindVersions = GithubReleases4J.getVersionBehind("CarmJos", "AliDDNS-Updater", currentVersion);
-        String downloadURL = GithubReleases4J.getReleasesURL("CarmJos", "AliDDNS-Updater");
-
-        if (behindVersions == null) {
-            severe("    检查更新失败，请您定期查看插件是否更新，避免安全问题。");
-            severe("    下载地址 " + downloadURL);
-        } else if (behindVersions == 0) {
-            info("    检查完成，当前已是最新版本。");
-        } else if (behindVersions > 0) {
-            info("    发现新版本! 目前已落后 " + behindVersions + " 个版本。");
-            info("    最新版下载地址 " + downloadURL);
-        } else {
-            severe("    检查更新失败! 当前版本未知，请您使用原生版本以避免安全问题。");
-            severe("    最新版下载地址 " + downloadURL);
-        }
-    }
-
-    protected static String getCurrentVersion() {
-        return new VersionReader("version.properties").get("version");
     }
 
 }
