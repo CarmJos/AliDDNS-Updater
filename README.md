@@ -14,6 +14,10 @@
 java -jar aliddns-updater-<version>.jar
 ```
 
+执行后，您应当看到以下内容输出：
+
+![运行输出](.doc/DEMO.png)
+
 ## 配置文件示例
 
 关于请求的具体配置内容请参考 [请求配置](.doc/REQUEST.md) 。
