@@ -11,7 +11,7 @@
 下载后，放到单独的文件夹内，在控制台中执行以下命令即可运行。
 
 ```shell
-java -jar aliddns-updater-<version>.jar
+java -jar AliDDNS-Updater-<version>.jar
 ```
 
 执行后，您应当看到以下内容输出：
