@@ -40,8 +40,10 @@ public class RequestManager {
     }
 
     public int doUpdate() {
-
-        Main.info("[" + this.format.format(new Date()) + "]" + " 开始执行第" + getUpdateCount() + "次更新...");
+        Main.print(" "); // 额外换个行区分内容
+        
+        int currentCount = getUpdateCount();
+        Main.info("[" + this.format.format(new Date()) + "]" + " 开始执行第" + currentCount + "次更新...");
 
         Main.info("从 " + QueryConfig.V4.getNotNull() + " 获取IPv4地址...");
         String IPv4 = getCurrentHostIP(false);
@@ -68,9 +70,8 @@ public class RequestManager {
                 exception.printStackTrace();
             }
         }
-
         getRegistry().countUpdate();
-        return getUpdateCount();
+        return currentCount;
     }
 
     public HashMap<String, UpdateRequest> getRequests() {

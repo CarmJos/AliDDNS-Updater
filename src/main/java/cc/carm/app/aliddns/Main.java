@@ -93,6 +93,10 @@ public class Main {
                 int limitTimes = ServiceConfig.TIMES.getNotNull();
                 if (limitTimes > 0 && count >= limitTimes) {
                     timer.cancel();       // 达到限定次数，跳出循环
+                    print("-------------------------------------------");
+                    print("已满足更新循环次数(" + limitTimes + "次)，程序自动退出。");
+                    print("如需无限定时循环更新，请修改配置文件中 “service.times” 的值为 “0” 。");
+                    print("-------------------------------------------");
                 }
             }
         }, 500, ServiceConfig.PERIOD.getNotNull() * 1000L);
