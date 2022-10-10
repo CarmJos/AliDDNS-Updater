@@ -12,12 +12,10 @@ public class RequestRegistry {
 
     protected final LinkedHashMap<String, UpdateRequest> requests;
     protected int updateCount;
-    protected boolean hasV6Request;
 
     public RequestRegistry(LinkedHashMap<String, UpdateRequest> requests) {
         this.requests = requests;
         this.updateCount = 1;
-        this.hasV6Request = requests.values().stream().anyMatch(UpdateRequest::isIpv6);
     }
 
     public LinkedHashMap<String, UpdateRequest> listRequests() {
@@ -32,8 +30,13 @@ public class RequestRegistry {
         this.updateCount++;
     }
 
+
+    public boolean hasV4Request() {
+        return requests.values().stream().anyMatch(r -> !r.isIpv6());
+    }
+
     public boolean hasV6Request() {
-        return hasV6Request;
+        return requests.values().stream().anyMatch(UpdateRequest::isIpv6);
     }
 
     public @NotNull Map<String, Object> serialize() {

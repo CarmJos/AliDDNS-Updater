@@ -26,6 +26,11 @@ public class RequestManager {
 
     }
 
+    public static boolean isIPV4Enabled() {
+        String url = QueryConfig.V4.get();
+        return url != null && url.length() > 0;
+    }
+
     public static boolean isIPV6Enabled() {
         String v6URL = QueryConfig.V6.get();
         return v6URL != null && v6URL.length() > 0;
@@ -41,13 +46,16 @@ public class RequestManager {
 
     public int doUpdate() {
         Main.print(" "); // 额外换个行区分内容
-        
+
         int currentCount = getUpdateCount();
         Main.info("[" + this.format.format(new Date()) + "]" + " 开始执行第" + currentCount + "次更新...");
 
-        Main.info("从 " + QueryConfig.V4.getNotNull() + " 获取IPv4地址...");
-        String IPv4 = getCurrentHostIP(false);
-        Main.info("     获取完成，当前IPv4地址为 " + IPv4);
+        String IPv4 = null;
+        if (isIPV4Enabled() && getRegistry().hasV4Request()) {
+            Main.info("从 " + QueryConfig.V4.getNotNull() + " 获取IPv4地址...");
+            IPv4 = getCurrentHostIP(false);
+            Main.info("     获取完成，当前IPv4地址为 " + IPv4);
+        }
 
         String IPv6 = null;
         if (isIPV6Enabled() && getRegistry().hasV6Request()) {
@@ -61,6 +69,9 @@ public class RequestManager {
             UpdateRequest currentRequest = entry.getValue();
             if (currentRequest.isIpv6() && IPv6 == null) {
                 Main.info("记录 [" + entry.getKey() + "] 为IPv6任务，但本实例未启用IPv6，跳过。");
+                continue;
+            } else if (!currentRequest.isIpv6() && IPv4 == null) {
+                Main.info("记录 [" + entry.getKey() + "] 为IPv4任务，但本实例未启用IPv4，跳过。");
                 continue;
             }
             try {

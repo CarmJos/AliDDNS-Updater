@@ -71,11 +71,18 @@ public class Main {
 
         print("初始化记录请求管理器...");
         requestManager = new RequestManager();
+        if (!RequestManager.isIPV4Enabled() && !RequestManager.isIPV6Enabled()) {
+            print("    您未配置任何地址获取方式(v4/v6)，请检查配置文件！");
+            System.exit(0);
+            return;
+        }
+
         int loaded = requestManager.getRequests().size();
 
         if (loaded < 1) {
             print("    您没有配置任何记录，请检查配置文件！");
             System.exit(0);
+            return;
         } else {
             print("    初始化完成，共加载了 " + loaded + " 个任务");
         }
