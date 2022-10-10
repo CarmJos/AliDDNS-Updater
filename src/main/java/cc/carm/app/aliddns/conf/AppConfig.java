@@ -34,4 +34,16 @@ public class AppConfig extends ConfigurationRoot {
             .serializeValue(RequestRegistry::serialize)
             .defaults(RequestRegistry.defaults())
             .build();
+
+    @HeaderComment({
+            "", "更新通知(Webhook) 配置",
+            "具体配置请参考 https://github.com/CarmJos/AliDDNS-Updater/blob/master/.doc/WEBHOOK.md"
+    })
+    public static final ConfigValue<RequestRegistry> WEBHOOKS = ConfiguredSection.builder(RequestRegistry.class)
+            .parseValue((w, d) -> RequestRegistry.loadFrom(w))
+            .serializeValue(RequestRegistry::serialize)
+            .defaults(RequestRegistry.defaults())
+            .build();
+
+
 }
