@@ -88,7 +88,12 @@ public class Main {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                getRequestManager().doUpdate();
+                int count = getRequestManager().doUpdate();
+
+                int limitTimes = ServiceConfig.TIMES.getNotNull();
+                if (limitTimes > 0 && count >= limitTimes) {
+                    timer.cancel();       // 达到限定次数，跳出循环
+                }
             }
         }, 500, ServiceConfig.PERIOD.getNotNull() * 1000L);
 
