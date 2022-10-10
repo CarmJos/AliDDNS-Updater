@@ -39,11 +39,30 @@ public class AppConfig extends ConfigurationRoot {
             "", "更新通知(Webhook) 配置",
             "具体配置请参考 https://github.com/CarmJos/AliDDNS-Updater/blob/master/.doc/WEBHOOK.md"
     })
-    public static final ConfigValue<RequestRegistry> WEBHOOKS = ConfiguredSection.builder(RequestRegistry.class)
-            .parseValue((w, d) -> RequestRegistry.loadFrom(w))
-            .serializeValue(RequestRegistry::serialize)
-            .defaults(RequestRegistry.defaults())
-            .build();
+    public static final class WEBHOOK {
 
+        public static final class ON_SUCCESS {
+
+            @HeaderComment("是否启用该类型的通知")
+            public static final ConfigValue<Boolean> ENABLE = ConfiguredValue.of(Boolean.class, false);
+
+        }
+
+        public static final class ON_FAILED {
+
+            @HeaderComment("是否启用该类型的通知")
+            public static final ConfigValue<Boolean> ENABLE = ConfiguredValue.of(Boolean.class, false);
+
+        }
+
+        public static final class ON_UNCHANGED {
+
+            @HeaderComment("是否启用该类型的通知")
+            public static final ConfigValue<Boolean> ENABLE = ConfiguredValue.of(Boolean.class, false);
+
+
+        }
+
+    }
 
 }
