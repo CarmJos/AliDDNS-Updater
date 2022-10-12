@@ -6,7 +6,7 @@
 
     <groupId>cc.carm.app</groupId>
     <artifactId>aliddns-updater</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.2</version>
     <packaging>jar</packaging>
 
     <properties>

@@ -5,6 +5,7 @@ import cc.carm.app.aliddns.conf.AppConfig;
 import cc.carm.app.aliddns.conf.QueryConfig;
 import cc.carm.app.aliddns.model.RequestRegistry;
 import cc.carm.app.aliddns.model.UpdateRequest;
+import cc.carm.app.aliddns.model.UpdateResult;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -75,7 +76,8 @@ public class RequestManager {
                 continue;
             }
             try {
-                currentRequest.doUpdate(currentRequest.isIpv6() ? IPv6 : IPv4);
+                UpdateResult result = currentRequest.doUpdate(currentRequest.isIpv6() ? IPv6 : IPv4);
+                result.executeWebhook();
             } catch (Exception exception) {
                 Main.severe("在更新请求 [" + entry.getKey() + "] 时发生问题，请检查配置。");
                 exception.printStackTrace();

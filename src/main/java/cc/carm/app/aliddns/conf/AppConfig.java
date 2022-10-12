@@ -1,6 +1,7 @@
 package cc.carm.app.aliddns.conf;
 
 import cc.carm.app.aliddns.model.RequestRegistry;
+import cc.carm.app.aliddns.model.WebhookNotify;
 import cc.carm.lib.configuration.core.ConfigurationRoot;
 import cc.carm.lib.configuration.core.annotation.HeaderComment;
 import cc.carm.lib.configuration.core.value.ConfigValue;
@@ -41,28 +42,29 @@ public class AppConfig extends ConfigurationRoot {
     })
     public static final class WEBHOOK {
 
-        public static final class ON_SUCCESS {
+        @HeaderComment("当域名成功更新时执行的Webhook通知")
+        public static final ConfigValue<WebhookNotify> ON_SUCCESS = ConfiguredValue
+                .builder(WebhookNotify.class).fromSection()
+                .parseValue((v, d) -> WebhookNotify.parse(v))
+                .serializeValue(WebhookNotify::serialize)
+                .defaults(WebhookNotify.defaults("更新%(type)域名 %(domain) 完成，新的IP地址为 %(address)。"))
+                .build();
 
-            @HeaderComment("是否启用该类型的通知")
-            public static final ConfigValue<Boolean> ENABLE = ConfiguredValue.of(Boolean.class, false);
+        @HeaderComment("当域名更新失败/出错时执行的Webhook通知")
+        public static final ConfigValue<WebhookNotify> ON_FAILED = ConfiguredValue
+                .builder(WebhookNotify.class).fromSection()
+                .parseValue((v, d) -> WebhookNotify.parse(v))
+                .serializeValue(WebhookNotify::serialize)
+                .defaults(WebhookNotify.defaults("更新域名 %(domain) 失败，请检查控制台查看错误原因。"))
+                .build();
 
-        }
-
-        public static final class ON_FAILED {
-
-            @HeaderComment("是否启用该类型的通知")
-            public static final ConfigValue<Boolean> ENABLE = ConfiguredValue.of(Boolean.class, false);
-
-        }
-
-        public static final class ON_UNCHANGED {
-
-            @HeaderComment("是否启用该类型的通知")
-            public static final ConfigValue<Boolean> ENABLE = ConfiguredValue.of(Boolean.class, false);
-
-
-        }
-
+        @HeaderComment("当域名无需更新时执行的Webhook通知")
+        public static final ConfigValue<WebhookNotify> ON_UNCHANGED = ConfiguredValue
+                .builder(WebhookNotify.class).fromSection()
+                .parseValue((v, d) -> WebhookNotify.parse(v))
+                .serializeValue(WebhookNotify::serialize)
+                .defaults(WebhookNotify.defaults("域名 %(domain) 地址未变更，跳过更新。"))
+                .build();
     }
 
 }

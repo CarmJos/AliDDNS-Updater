@@ -19,10 +19,9 @@ import java.util.Map;
 public class UpdateRequest {
 
 
-    @NotNull
-    private final String accessKey;
-    @NotNull
-    private final String accessKeySecret;
+    private final @NotNull String accessKey;
+
+    private final @NotNull String accessKeySecret;
 
     private final String domain;
     private final String record;
@@ -36,7 +35,6 @@ public class UpdateRequest {
         this.record = record;
         this.ipv6 = ipv6;
     }
-
 
     public Map<String, Object> serialize() {
         Map<String, Object> data = new LinkedHashMap<>();
@@ -88,7 +86,7 @@ public class UpdateRequest {
      *
      * @param currentValue 当前数值内容
      */
-    public void doUpdate(String currentValue) throws ClientException {
+    public @NotNull UpdateResult doUpdate(String currentValue) throws ClientException {
 
         DefaultProfile profile = DefaultProfile.getProfile(ServiceConfig.REGION_ID.getNotNull(), getAccessKey(), getAccessKeySecret());
         DefaultAcsClient client = new DefaultAcsClient(profile);
@@ -106,8 +104,10 @@ public class UpdateRequest {
         List<DescribeDomainRecordsResponse.Record> domainRecords = describeDomainRecordsResponse.getDomainRecords();
 
         if (domainRecords == null || domainRecords.size() == 0) {
-            Main.severe("    域名“" + getDomain() + "”下无" + getRecordType() + "记录 “" + getRecord() + "” ，请检查阿里云控制台。");
-            return;
+            return new UpdateResult(
+                    false, getFullDomain(), getRecordType(), null, currentValue,
+                    "    域名“" + getDomain() + "”下无" + getRecordType() + "记录 “" + getRecord() + "” ，请检查阿里云控制台。"
+            );
         }
 
         DescribeDomainRecordsResponse.Record record = domainRecords.get(0); //得到最新一条
@@ -116,23 +116,32 @@ public class UpdateRequest {
         String recordValue = record.getValue();
 
         if (currentValue.length() > 0 && !currentValue.equals(recordValue)) {
-            UpdateDomainRecordRequest updateDomainRecordRequest = new UpdateDomainRecordRequest();
-            updateDomainRecordRequest.setRR(getRecord());
-            updateDomainRecordRequest.setRecordId(recordID);
-            updateDomainRecordRequest.setValue(currentValue);
-            updateDomainRecordRequest.setType(getRecordType());
+            UpdateDomainRecordRequest request = new UpdateDomainRecordRequest();
+            request.setRR(getRecord());
+            request.setRecordId(recordID);
+            request.setValue(currentValue);
+            request.setType(getRecordType());
 
             //发出请求，收到回复
-            UpdateDomainRecordResponse updateDomainRecordResponse = client.getAcsResponse(updateDomainRecordRequest);
-            Main.debug(" \n" + JSON.toJSONString(updateDomainRecordResponse, true));
+            UpdateDomainRecordResponse response = client.getAcsResponse(request);
+            Main.debug(" \n" + JSON.toJSONString(response, true));
 
-            if (recordID.equals(updateDomainRecordResponse.getRecordId())) {
-                Main.info("     记录 “" + getFullDomain() + "” 成功更新为 " + currentValue + " 。");
+            if (recordID.equals(response.getRecordId())) {
+                return new UpdateResult(
+                        true, getFullDomain(), getRecordType(), recordValue, currentValue,
+                        "记录 “" + getFullDomain() + "” 成功更新为 " + currentValue + " 。"
+                );
             } else {
-                Main.severe("    记录 “" + getFullDomain() + "” 更新失败,请检查网络与配置。");
+                return new UpdateResult(
+                        false, getFullDomain(), getRecordType(), recordValue, currentValue,
+                        "记录 “" + getFullDomain() + "” 更新失败,请检查网络与配置。"
+                );
             }
         } else {
-            Main.info("     记录 “" + getFullDomain() + "” 无需更新，跳过。");
+            return new UpdateResult(
+                    true, getFullDomain(), getRecordType(), recordValue, currentValue,
+                    "记录 “" + getFullDomain() + "” 无需更新，跳过。"
+            );
         }
     }
 

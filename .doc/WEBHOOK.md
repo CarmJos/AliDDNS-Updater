@@ -5,23 +5,19 @@
 webhook:
   # 在更新成功时执行通知
   on-success:
-    enable: true # 是否启用
-    message: "更新%(type)域名 %(domain) 完成，新的IP地址为 %(address)。"
     url: "https://api.example.com/{YOUR_KEY}/notify/%(message)" # 运营商给出的Webhook地址
+    message: "更新%(type)域名 %(domain) 完成，新的IP地址为 %(address)。"
 
   # 在更新失败时执行通知
   on-failed:
-    enable: false # 是否启用
-    
+    url: "" # 若URL留空则代表不启用通知
     message: "更新域名 %(domain) 失败，请检查控制台查看错误原因。"
-    url: "https://api.example.com/{YOUR_KEY}/webhook/" # 运营商给出的Webhook地址
     request: "{\"msgtype\": \"markdown\",\"markdown\": {\"title\":\"DDNS更新结果-失败\",\"text\": \"#### DDNS-Updater \n %(message) \n\"}}"
 
   # 在无需变更时执行通知
   on-unchanged:
-    enable: false # 是否启用
-    message: "域名 %(domain) 地址未变更，跳过更新。"
     url: "https://api.example.com/{YOUR_KEY}/webhook/" # 运营商给出的Webhook地址
+    message: "域名 %(domain) 地址未变更，跳过更新。"
     request: "{\"msgtype\":\"markdown\",\"markdown\":{\"title\":\"DDNS更新结果-跳过\",\"text\":\"#### DDNS-Updater \n %(message) \n\"}}"
 
 ```
