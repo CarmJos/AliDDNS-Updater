@@ -33,10 +33,11 @@ jobs:
       - name: "Upload artifact"
         uses: actions/upload-artifact@v2
         with:
-          name: Artifact
+          name: artifact
           path: target
 
       - name: "Upload assets"
         uses: actions/upload-artifact@v2
         with:
+          name: asset
           path: ".asset"
