@@ -47,7 +47,7 @@ public class AppConfig extends ConfigurationRoot {
                 .builder(WebhookNotify.class).fromSection()
                 .parseValue((v, d) -> WebhookNotify.parse(v))
                 .serializeValue(WebhookNotify::serialize)
-                .defaults(WebhookNotify.defaults("更新%(type)域名 %(domain) 完成，新的IP地址为 %(address)。"))
+                .defaults(new WebhookNotify("https://api.example.com/{YOUR_KEY}/notify?=" + "更新%(type)域名 %(domain) 完成，新的IP地址为 %(address)。"))
                 .build();
 
         @HeaderComment("当域名更新失败/出错时执行的Webhook通知")
@@ -55,7 +55,7 @@ public class AppConfig extends ConfigurationRoot {
                 .builder(WebhookNotify.class).fromSection()
                 .parseValue((v, d) -> WebhookNotify.parse(v))
                 .serializeValue(WebhookNotify::serialize)
-                .defaults(WebhookNotify.defaults("更新域名 %(domain) 失败，请检查控制台查看错误原因。"))
+                .defaults(new WebhookNotify("https://api.example.com/{YOUR_KEY}/notify?=" + "更新域名 %(domain) 失败，请检查控制台查看错误原因。"))
                 .build();
 
         @HeaderComment("当域名无需更新时执行的Webhook通知")
@@ -63,7 +63,7 @@ public class AppConfig extends ConfigurationRoot {
                 .builder(WebhookNotify.class).fromSection()
                 .parseValue((v, d) -> WebhookNotify.parse(v))
                 .serializeValue(WebhookNotify::serialize)
-                .defaults(WebhookNotify.defaults("域名 %(domain) 地址未变更，跳过更新。"))
+                .defaults(new WebhookNotify("https://api.example.com/{YOUR_KEY}/notify?=" + "域名 %(domain) 地址未变更，跳过更新。"))
                 .build();
     }
 
