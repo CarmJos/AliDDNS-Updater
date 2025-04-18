@@ -105,7 +105,7 @@
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-core</artifactId>
-            <version>4.7.4-20250416-hotfix</version>
+            <version>4.7.5</version>
             <scope>compile</scope>
         </dependency>
 
